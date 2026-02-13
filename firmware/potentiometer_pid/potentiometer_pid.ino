@@ -84,7 +84,7 @@ void loop() {
             Serial.print(",");
             Serial.print(currentPos);
             Serial.print(",");
-            Serial.print(targetSetpoint);
+            Serial.print((int)targetSetpoint);
             Serial.print(",");
             Serial.println(output);
         }

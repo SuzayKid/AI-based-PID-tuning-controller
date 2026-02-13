@@ -2,7 +2,6 @@ import serial
 import serial.tools.list_ports
 import time
 import pandas as pd
-import threading
 
 class MotorInterface:
     def __init__(self, baud_rate=115200, timeout=2):

@@ -62,13 +62,13 @@ We approach this complex problem in four distinct stages of increasing difficult
 The tuning process mimics natural selection:
 
 1. **Spawn:** Create 20 random sets of PID values (The "Population").  
-2. **Test:** Run each set on the real motor for 2 seconds.  
+2. **Test:** Run each set on the real motor for 1.5 seconds.  
 3. **Grade:** Calculate a score based on:  
    * *Did it reach the target?* (Error)  
    * *Did it fly past the target?* (Overshoot)  
    * *How long did it take?* (Settling Time)  
 4. **Evolve:** Kill the bad performers. Mix the genes (mathematical average) of the top performers to create the next generation.  
-5. **Mutate:** Randomly tweak values by ±5% to discover new solutions.  
+5. **Mutate:** Randomly tweak values by ±20% to discover new solutions.  
 6. **Repeat:** Until the motor moves perfectly.
 
 ## **🛠 Hardware Requirements**
@@ -81,20 +81,46 @@ The tuning process mimics natural selection:
 
 ## **📦 Directory Structure**
 
-/  
-├── firmware/                 \# Arduino/C++ code  
-│   ├── basic\_test/           \# Hardware sanity checks  
-│   ├── potentiometer\_pid/    \# Level 1 Firmware  
-│   └── encoder\_velocity/     \# Level 2 Firmware  
-├── python/                   \# The AI Logic  
-│   ├── simulation/           \# Pure software testing  
-│   ├── interface/            \# Serial communication classes  
-│   └── genetic\_tuner.py      \# The main evolutionary loop  
-└── docs/                     \# Schematics and graphs
+```
+/
+├── firmware/                     # Arduino/C++ code
+│   ├── basic_test/               # Hardware sanity checks (Phase 1)
+│   │   ├── Motor.h
+│   │   ├── Potentiometer.h
+│   │   └── basic_test.ino
+│   └── potentiometer_pid/        # Level 1 PID Firmware (Phase 2)
+│       ├── Motor.h
+│       ├── Potentiometer.h
+│       ├── PID.h
+│       └── potentiometer_pid.ino
+├── python/                       # The AI Logic
+│   ├── ai/                       # Genetic Algorithm
+│   │   ├── cost_function.py      # Fitness scoring
+│   │   └── genetic_tuner.py      # Evolution engine
+│   ├── interface/                # Serial communication
+│   │   └── motor_interface.py    # Arduino driver
+│   ├── simulation/               # Pure software testing (future)
+│   ├── connection_test.py        # Phase 3 verification
+│   ├── main_tuner.py             # Main tuning loop
+│   └── genetic_tuner.py          # Entry point (shortcut)
+├── docs/                         # Documentation & schematics
+│   ├── Abstract.md
+│   ├── Phase-1.md … Phase-4.md
+│   └── (schematics, graphs)
+├── README.md
+└── ROADMAP.md
+```
 
 ## **🏁 Getting Started**
 
 1. **Assemble Level 1 Rig:** Connect motor, L298N, and Potentiometer.  
-2. **Flash Firmware:** Upload firmware/potentiometer\_pid.  
-3. **Run Tuner:** Execute python/genetic\_tuner.py.  
-4. **Watch:** Observe the graphs as the AI teaches the motor to move efficiently.
+2. **Flash Sanity Check:** Upload `firmware/basic_test/basic_test.ino` and verify wiring.  
+3. **Flash PID Firmware:** Upload `firmware/potentiometer_pid/potentiometer_pid.ino`.  
+4. **Install Python Dependencies:**
+   ```bash
+   cd python/
+   pip install -r requirements.txt
+   ```
+5. **Test Connection:** Run `python3 connection_test.py` — verify step response graph.  
+6. **Run AI Tuner:** Execute `python3 genetic_tuner.py`.  
+7. **Watch:** Observe the graphs as the AI teaches the motor to move efficiently.
